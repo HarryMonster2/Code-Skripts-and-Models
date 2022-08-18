@@ -8,7 +8,7 @@ public class Aming : MonoBehaviour
     public Vector3 normalLocalPosition;
     public Vector3 normalLocalRotation;
     public Vector3 aimingLocalPosition;
-    public Vector3 LeaningLocalRotation;
+    public Vector3 aimingLocalRotation;
     public float aimSmoothing = 10;
 
 //store current eulers
@@ -18,27 +18,38 @@ public class Aming : MonoBehaviour
     void Update()
     {
         DetermineAim();
-        DetermineLean();
+        DetermineADS();
     }
 
+//position aim
     private void DetermineAim()
     {
+        Vector3 target = normalLocalRotation;
         Vector3 target = normalLocalPosition;
-        if (Input.GetMouseButton(1)) 
+        if (Input.GetMouseButton(1))
+        { 
             target = aimingLocalPosition;
 
+            target = aimingLocalRotation;
+            curEulers = Vector3.Lerp(curEulers, target, Time.deltaTime * aimSmoothing);
+        }
         Vector3 desiredPosition = Vector3.Lerp(transform.localPosition, target, Time.deltaTime * aimSmoothing);
 
         transform.localPosition = desiredPosition;
-    }
-//rotation cam
-    private void DetermineLean()
-    {
-        Vector3 target = normalLocalRotation;
-        if(Input.GetMouseButton(1))
-            target = LeaningLocalRotation;
-        curEulers = Vector3.Lerp(curEulers, target, Time.deltaTime * aimSmoothing);
 
+        
         transform.localRotation = Quaternion.Euler(curEulers);
     }
+
+//rotation aim
+    // private void DetermineADS()
+    // {
+    //     Vector3 target = normalLocalRotation;
+    //     if(Input.GetMouseButton(1))
+    //     {
+    //         target = aimingLocalRotation;
+    //         curEulers = Vector3.Lerp(curEulers, target, Time.deltaTime * aimSmoothing);
+    //     }
+    //     transform.localRotation = Quaternion.Euler(curEulers);
+    // }
 }
